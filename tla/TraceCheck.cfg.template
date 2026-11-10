@@ -1,0 +1,24 @@
+\* EXPECT: EXPECTLINE
+SPECIFICATION TraceSpec
+CONSTANTS
+    Server = {"m1", "m2", "m3"}
+    Value = {"cmd"}
+    Nil = "nil"
+    Noop = "noop"
+    Campaigners = {"m1", "m2", "m3"}
+    Silent = {}
+    MaxTerm = 1000000
+    MaxLogLen = 1000000
+    MaxBatch = 16
+    MaxMsgs = 1000000
+    MaxCrashes = 1000000
+    PreVote = PREVOTE
+    AckBeforeDurable = FALSE
+    GrantBeforeDurable = FALSE
+    LeaderCountsVolatile = FALSE
+    CommitOldTermByCount = FALSE
+    NoLogCheckOnVote = FALSE
+    MatchIndexAssign = FALSE
+    Pipeline = FALSE
+    TraceFile = "TRACEFILE"
+INVARIANT NotDone
