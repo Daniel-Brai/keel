@@ -4,15 +4,33 @@ This is what Keel 0.1 can do today. Every call below exists in the code. Run the
 
 ## Start the release
 
-Build it with `MIX_ENV=prod mix release keel`. Start each member with its own node name and the same cookie.
+Download a tarball from the GitHub release or build one with `MIX_ENV=prod mix release keel`. The tarball holds the Erlang runtime. The Linux build needs glibc 2.34 and OpenSSL 3.0 or newer.
+
+Each member reads its group from the environment and starts it at boot.
+
+| Variable | Meaning |
+|---|---|
+| `KEEL_MEMBER_ID` | This member's id. Without it the release starts no group. |
+| `KEEL_MEMBERS` | Every member as `id=name@host` joined by commas. |
+| `KEEL_CLUSTER_ID` | 32 hex characters. The same on every member and on every restart. |
+| `KEEL_START` | `bootstrap` for the first start of a new cluster. `join` for a member that will be added later. Leave it unset otherwise. |
+| `KEEL_DATA_DIR` | Where the log and snapshots live. The default is `/var/lib/keel/default`. |
+| `KEEL_GROUP` | The group name. The default is `default`. |
+
+Make the cluster id once with `openssl rand -hex 16` and keep it. Then start each member with its own id and node name and the same cookie.
 
 ```sh
-RELEASE_DISTRIBUTION=name RELEASE_NODE=a@10.0.0.1 RELEASE_COOKIE=secret bin/keel daemon
+export KEEL_MEMBERS=a=a@10.0.0.1,b=b@10.0.0.2,c=c@10.0.0.3
+export KEEL_CLUSTER_ID=9f1c0e7a5b3d42e8a6c4b2d0e8f61a37
+RELEASE_DISTRIBUTION=name RELEASE_NODE=a@10.0.0.1 RELEASE_COOKIE=secret \
+  KEEL_MEMBER_ID=a KEEL_START=bootstrap bin/keel daemon
 ```
 
-The release starts the application and nothing else. It does not start a group. Your service wrapper must call `Keel.start_group/2` after every boot.
+A member that already holds data ignores `KEEL_START`. So a service unit can keep it set. A missing or bad variable stops the boot with a message that names it.
 
-## Bootstrap a group
+## Bootstrap a group by hand
+
+Without the variables a node starts no group. This is the call the release makes for you.
 
 Pick 16 random bytes once and keep them. They are the cluster id. Every member must get the same bytes now and on every restart.
 

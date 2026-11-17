@@ -45,4 +45,4 @@ make sim SEED=42
 - `make bench` starts three real members on this machine and writes `bench/results.md`. It takes about fifteen minutes and needs a few GiB of free disk.
 - `make lazyfs` and `make power` run the power loss tests. They skip with a message when LazyFS or root is missing.
 
-Build a release with `MIX_ENV=prod mix release keel`. `docs/operations.md` shows how to run a cluster.
+Download a release tarball from GitHub or build one with `MIX_ENV=prod mix release keel`. Each member starts its group from `KEEL_*` variables at boot. `docs/operations.md` shows how to run a cluster.

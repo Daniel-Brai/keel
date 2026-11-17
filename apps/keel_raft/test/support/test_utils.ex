@@ -865,6 +865,12 @@ defmodule Keel.TestUtils do
     base |> Keyword.merge(machine) |> Keyword.merge(rest)
   end
 
+  def boot_opts(dir, group, extra \\ []) do
+    opts = member_opts(dir, group, extra)
+
+    Keyword.delete(opts, :group)
+  end
+
   def slow_opts(dir, group, extra \\ []) do
     members = %{"a" => node(), "b" => node(), "c" => node()}
     raft = [election_ticks_min: 40, election_ticks_max: 50, pre_vote: false, check_quorum: false]
