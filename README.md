@@ -6,6 +6,40 @@ Keel is a Raft library and a linearizable key-value store built on it. A cluster
 
 The consensus core is a pure function. It takes a state and an event and returns a new state and a list of effects. A simulator runs whole clusters in one process from a seed. A failing run replays exactly.
 
+## Download
+
+Each [release](https://github.com/Daniel-Brai/keel/releases) has a tarball for Linux and macOS. It needs nothing else installed.
+
+Download a tarball and its checksum from the releases page in a browser or with `curl`. Set `VERSION` to the release you want.
+
+```sh
+VERSION=v0.2.0
+BASE=https://github.com/Daniel-Brai/keel/releases/download/$VERSION
+curl -LO "$BASE/keel-$VERSION-linux-x86_64.tar.gz"
+curl -LO "$BASE/keel-$VERSION-linux-x86_64.tar.gz.sha256"
+```
+
+With the GitHub CLI `gh release download --repo Daniel-Brai/keel --pattern 'keel-*-linux-x86_64.tar.gz*'` fetches the newest one.
+
+Check the file and unpack it.
+
+```sh
+sha256sum -c "keel-$VERSION-linux-x86_64.tar.gz.sha256"
+tar -xzf "keel-$VERSION-linux-x86_64.tar.gz"
+```
+
+Start a member. Every member gets the same `KEEL_MEMBERS` and `KEEL_CLUSTER_ID` and its own `KEEL_MEMBER_ID` and node name. Make the cluster id once with `openssl rand -hex 16`. Use `KEEL_START=bootstrap` on the first start of a new cluster.
+
+```sh
+RELEASE_DISTRIBUTION=name RELEASE_NODE=a@10.0.0.1 RELEASE_COOKIE=secret \
+  KEEL_MEMBER_ID=a KEEL_START=bootstrap \
+  KEEL_MEMBERS=a=a@10.0.0.1,b=b@10.0.0.2,c=c@10.0.0.3 \
+  KEEL_CLUSTER_ID=9f1c0e7a5b3d42e8a6c4b2d0e8f61a37 \
+  keel/bin/keel daemon
+```
+
+On macOS swap `linux-x86_64` for `macos-arm64` and use `shasum -a 256 -c` in place of `sha256sum -c`. To build a tarball yourself run `MIX_ENV=prod mix release keel`. `docs/operations.md` covers every variable and how to grow or shrink a cluster.
+
 ## Apps
 
 - `keel_raft` is the Raft library. It keeps the log in the same order on every member and hands committed entries to a state machine you supply.
@@ -45,4 +79,3 @@ make sim SEED=42
 - `make bench` starts three real members on this machine and writes `bench/results.md`. It takes about fifteen minutes and needs a few GiB of free disk.
 - `make lazyfs` and `make power` run the power loss tests. They skip with a message when LazyFS or root is missing.
 
-Download a release tarball from GitHub or build one with `MIX_ENV=prod mix release keel`. Each member starts its group from `KEEL_*` variables at boot. `docs/operations.md` shows how to run a cluster.
