@@ -53,11 +53,15 @@ defmodule Bench.Machine do
   end
 
   defp keel do
-    case System.cmd("git", ["rev-parse", "--short", "HEAD"], stderr_to_stdout: true) do
-      {commit, 0} -> "commit #{String.trim(commit)} plus any uncommitted changes"
-      {_text, _status} -> "no commit yet. Working tree of #{Date.utc_today()}"
-    end
+    version = Mix.Project.config()[:version]
+    {commit, 0} = System.cmd("git", ["rev-parse", "--short", "HEAD"])
+    {changes, 0} = System.cmd("git", ["status", "--porcelain", "--untracked-files=no"])
+
+    "v#{version} at commit #{String.trim(commit)}#{uncommitted(changes)}"
   end
+
+  defp uncommitted(""), do: ""
+  defp uncommitted(_changes), do: " with uncommitted changes"
 
   defp mount_of(dir) do
     args = ["-no", "SOURCE,FSTYPE,OPTIONS", "-T", dir]

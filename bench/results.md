@@ -13,7 +13,7 @@ Run on 2026-11-17 with `make bench`. Every number below comes from this machine.
 | Filesystem | btrfs on /dev/nvme0n1p6[/home], options rw,relatime,seclabel,compress=zstd:1,ssd,discard=async,space_cache=v2,subvolid=257,subvol=/home |
 | OS | Linux 7.3.3-200.fc44.x86_64 |
 | BEAM | OTP 29, Elixir 1.20.5, 8 schedulers, +sbwt at its default |
-| Keel | no commit yet. Working tree of 2026-11-17 |
+| Keel | v0.1.0 at commit 5f3f90a. v0.2.0 runs the same engine |
 
 ## Against the targets
 
