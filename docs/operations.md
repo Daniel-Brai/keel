@@ -1,6 +1,6 @@
 # Running Keel
 
-This is what Keel 0.1 can do today. Every call below exists in the code. Run the calls on a member's node. From a release use `bin/keel rpc '...'`. On a dev node use `iex`.
+This is what Keel 0.2 can do today. Every call below exists in the code. Run the calls on a member's node. From a release use `bin/keel rpc '...'`. On a dev node use `iex`.
 
 ## Start the release
 
@@ -108,7 +108,7 @@ Bring the missing members back. Restart crashed nodes and fix the network. A mem
 
 Don't bootstrap the survivors as a new group. Don't copy log files between members. Don't put an old copy of a data directory back. A stale copy forgets votes and writes it acknowledged. That can lose acknowledged data.
 
-Keel 0.1 has no tool to recover from the loss of a majority. It has none to export a snapshot either. If most disks are gone for good you can't rebuild the group in place.
+Keel 0.2 has no tool to recover from the loss of a majority. It has none to export a snapshot either. If most disks are gone for good you can't rebuild the group in place.
 
 ### The disk is full
 

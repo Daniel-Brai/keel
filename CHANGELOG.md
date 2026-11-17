@@ -5,6 +5,15 @@ See [Conventional Commits](Https://conventionalcommits.org) for commit guideline
 
 <!-- changelog -->
 
+## [v0.2.0](https://github.com/daniel-brai/keel/compare/v0.1.0...v0.2.0) (2026-11-17)
+
+
+
+
+### Features:
+
+* start a group from the environment at boot
+
 ## v0.1.0 (2026-11-17)
 
 
