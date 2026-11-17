@@ -43,14 +43,16 @@ jobs:
           name="keel-${TAG}-${{ matrix.target }}.tar.gz"
           tar -czf "$name" -C _build/prod/rel keel
           shasum -a 256 "$name" > "$name.sha256"
-      - name: Check that the release starts
+      - name: Check that the release starts a group and serves a write
         run: |
           mkdir try
           tar -xzf "keel-${TAG}-${{ matrix.target }}.tar.gz" -C try
           export RELEASE_NODE=keelcheck@127.0.0.1 RELEASE_DISTRIBUTION=name RELEASE_COOKIE=check
+          export KEEL_MEMBER_ID=a KEEL_MEMBERS=a=keelcheck@127.0.0.1 KEEL_START=bootstrap
+          export KEEL_CLUSTER_ID=$(openssl rand -hex 16) KEEL_DATA_DIR="$PWD/try/data"
           try/keel/bin/keel daemon
           sleep 5
-          try/keel/bin/keel rpc 'true = Process.whereis(Keel.Supervisor) != nil'
+          try/keel/bin/keel rpc '{:ok, _writer} = Keel.KV.start_writer(:default, nodes: [node()]); {:ok, _revision} = Keel.KV.put(:default, "k", "v"); {:ok, %{value: "v"}} = Keel.KV.get(:default, "k")'
           try/keel/bin/keel stop
       - uses: actions/upload-artifact@v4
         with:
